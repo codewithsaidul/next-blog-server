@@ -81,6 +81,33 @@ const updateUser = async (id: number, payload: Partial<Prisma.UserCreateInput>) 
     return updateUser
 }
 
+
+const deleteUser = async (id: number) => {
+    const isUserExist = await prisma.user.findUnique({ where: { id } });
+
+    if (!isUserExist) {
+        throw new Error("User Not Found")
+    }
+
+    const deletedUser = await prisma.user.delete({
+        where: { id },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            picture: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true
+        }
+    })
+
+
+    return deletedUser
+}
+
+
 export const UserService = {
-    createUser, getAllUsers, getUserById, updateUser
+    createUser, getAllUsers, getUserById, updateUser, deleteUser
 }

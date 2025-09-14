@@ -50,6 +50,18 @@ const updateUserData = async (req: Request, res: Response, next: NextFunction) =
 }
 
 
+
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = await UserService.deleteUser(Number(req.params.id));
+
+        res.status(200).json({ message: "User deleted successfully", data: result})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
+
+
 export const UserController = {
-    createUser, getAllUsers, getUserById, updateUserData
+    createUser, getAllUsers, getUserById, updateUserData, deleteUser
 }

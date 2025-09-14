@@ -55,6 +55,32 @@ const getUserById = async (id: number) => {
 }
 
 
+const updateUser = async (id: number, payload: Partial<Prisma.UserCreateInput>) => {
+    const isUserExist = await prisma.user.findUnique({ where: { id } });
+
+    if (!isUserExist) {
+        throw new Error("User Not Found")
+    }
+
+    const updateUser = await prisma.user.update({
+        where: { id },
+        data: payload,
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            picture: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true
+        }
+    })
+
+
+    return updateUser
+}
+
 export const UserService = {
-    createUser, getAllUsers, getUserById
+    createUser, getAllUsers, getUserById, updateUser
 }

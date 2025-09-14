@@ -27,7 +27,18 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 
+const getUserById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = await UserService.getUserById(Number(req.params.id));
+
+        res.status(200).json({ message: "User Data retrived successfully", data: result})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
+
+
 
 export const UserController = {
-    createUser, getAllUsers
+    createUser, getAllUsers, getUserById
 }

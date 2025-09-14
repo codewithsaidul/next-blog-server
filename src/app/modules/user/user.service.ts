@@ -23,7 +23,8 @@ const getAllUsers = async () => {
             picture: true,
             status: true,
             createdAt: true,
-            updatedAt: true
+            updatedAt: true,
+            Post: true
         }
     });
 
@@ -31,6 +32,29 @@ const getAllUsers = async () => {
 }
 
 
+
+const getUserById = async (id: number) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            picture: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+            Post: true
+        }
+    })
+
+    return user
+}
+
+
 export const UserService = {
-    createUser, getAllUsers
+    createUser, getAllUsers, getUserById
 }

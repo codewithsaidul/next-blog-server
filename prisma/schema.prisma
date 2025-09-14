@@ -18,14 +18,14 @@ model User {
   name       String
   email      String
   password   String?
+  role       Role       @default(USER)
   phone      String
   picture    String?
-  role       Role       @default(USER)
   status     UserStatus @default(ACTIVE)
   isVerified Boolean    @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
-  Post       Post[]
+  posts      Post[]
 }
 
 model Post {
@@ -43,7 +43,7 @@ model Post {
 }
 
 enum Role {
-  SUPERADMIN
+  SUPER_ADMIN
   ADMIN
   USER
 }
@@ -51,5 +51,5 @@ enum Role {
 enum UserStatus {
   ACTIVE
   INACTIVE
-  BLOCKED
+  BLOCK
 }

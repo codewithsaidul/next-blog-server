@@ -24,7 +24,7 @@ const getAllUsers = async () => {
             status: true,
             createdAt: true,
             updatedAt: true,
-            Post: true
+            posts: true
         }
     });
 
@@ -47,7 +47,7 @@ const getUserById = async (id: number) => {
             status: true,
             createdAt: true,
             updatedAt: true,
-            Post: true
+            posts: true
         }
     })
 

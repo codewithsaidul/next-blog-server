@@ -1,0 +1,33 @@
+import { NextFunction, Request, Response } from "express";
+import { PostService } from "./post.service";
+
+
+
+
+
+
+const createPost = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = await PostService.createPost(req.body);
+
+        res.status(201).json({ message: "Post created successfully", data: result})
+    } catch (error) {
+        console.log(error)
+        res.status(400).json(error)
+    }
+}
+
+
+const getAllPost = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = await PostService.getAllPost();
+
+        res.status(201).json({ message: "All Post retrived successfully", data: result})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
+
+export const PostController = {
+    createPost, getAllPost
+}

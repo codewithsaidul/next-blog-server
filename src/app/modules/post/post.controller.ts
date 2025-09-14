@@ -28,6 +28,29 @@ const getAllPost = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+
+
+const getSinglePost = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = await PostService.getSinglePost(Number(req.params.id));
+
+        res.status(201).json({ message: "Post data retrived successfully", data: result})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
+
+
+const updatePostInfo = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = await PostService.updatePostInfo(Number(req.params.id), req.body);
+
+        res.status(201).json({ message: "Post data updated successfully", data: result})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
+
 export const PostController = {
-    createPost, getAllPost
+    createPost, getAllPost, getSinglePost, updatePostInfo
 }

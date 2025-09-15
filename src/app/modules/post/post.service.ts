@@ -18,8 +18,11 @@ const createPost = async (payload: Prisma.PostCreateInput): Promise<Post> => {
   return result;
 };
 
-const getAllPost = async () => {
+const getAllPost = async (page: number, limit: number) => {
+  const skip = (page - 1) * limit
   const posts = await prisma.post.findMany({
+    skip,
+    take: limit,
     include: {
       author: {
         select: {

@@ -18,8 +18,42 @@ const createPost = async (payload: Prisma.PostCreateInput): Promise<Post> => {
   return result;
 };
 
-const getAllPost = async () => {
+const getAllPost = async ({
+  page = 1,
+  limit = 10,
+  sortBy = "createdAt",
+  sortOrder = "desc",
+  search,
+  isFeatured,
+  tags,
+}: {
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: string;
+  search?: string;
+  isFeatured?: boolean;
+  tags?: string[];
+}) => {
+  const skip = (page - 1) * limit;
+
+  const where: any = {
+    AND: [
+      search && {
+        OR: [
+          { title: { contains: search, mode: "insensitive" } },
+          { content: { contains: search, mode: "insensitive" } },
+        ],
+      },
+      typeof isFeatured === "boolean" && { isFeatured },
+      tags && tags?.length > 0 && { tags: { hasEvery: tags } },
+    ].filter(Boolean),
+  };
+
   const posts = await prisma.post.findMany({
+    skip,
+    take: limit,
+    where,
     include: {
       author: {
         select: {
@@ -30,9 +64,22 @@ const getAllPost = async () => {
         },
       },
     },
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
   });
 
-  return posts;
+  const total = await prisma.post.count({ where });
+
+  return {
+    data: posts,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 const getSinglePost = async (id: number) => {
@@ -84,21 +131,19 @@ const updatePostInfo = async (
     },
   });
 
-
-  return update
+  return update;
 };
 
-
 const deletePost = async (id: number) => {
-  const post = await prisma.post.delete( { where: { id } } )
+  const post = await prisma.post.delete({ where: { id } });
 
-  return post
-}
+  return post;
+};
 
 export const PostService = {
   createPost,
   getAllPost,
   getSinglePost,
   updatePostInfo,
-  deletePost
+  deletePost,
 };

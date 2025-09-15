@@ -18,13 +18,19 @@ const getAllPost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page  = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
-    const search = req.query.search || "";
-    const result = await PostService.getAllPost(page, limit, search as string);
+    const search = (req.query.search as string) || "";
+    const isFeatured = req.query.isFeatured ? req.query.isFeatured === "true" : undefined;
+    const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
+    const sortBy = (req.query.sortBy as string) || "createdAt";
+    const sortOrder = (req.query.sortOrder as string) || "desc";
+
+    const result = await PostService.getAllPost( { page, limit, search, isFeatured, tags, sortBy, sortOrder } );
 
     res
       .status(200)
-      .json({ message: "All Post retrived successfully", data: result });
+      .json({ message: "All Post retrived successfully", data: result.data, meta: result.meta });
   } catch (error) {
+    console.log(error)
     res.status(400).json(error);
   }
 };

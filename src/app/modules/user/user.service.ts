@@ -12,7 +12,6 @@ const createUser = async (payload: Prisma.UserCreateInput): Promise<User> => {
 }
 
 
-
 const getAllUsers = async () => {
     const users = await prisma.user.findMany({
         select: {
